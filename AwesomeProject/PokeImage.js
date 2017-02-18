@@ -6,6 +6,7 @@ import {
     StyleSheet, Image
 }
 from 'react-native';
+
 const styles = StyleSheet.create({
     photo: {
         height: 80
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
     , }
 , });
 
-export default class PokeImage extends Component {
+export default class PokeImage extends React.Component {
     render() {
         return ( < Image style = {
                 styles.photo

@@ -4,27 +4,42 @@ import React, {
     Component
 }
 from 'react';
+
+import PokeRow from './PokeRow';
+
+
 import {
-    StyleSheet, Image
+    StyleSheet, ListView,TouchableWithoutFeedback, 
 }
 from 'react-native';
+ 
 const styles = StyleSheet.create({
-    photo: {
-        height: 80
-        , width: 80
-    , }
-, });
+        
+        container: {
+            flex: 1
+            , padding: 12
+        , }
+        
+    , });
 
-export default class PokeListView extends Component {
+
+export default class PokeListView extends React.Component {
+    
     render() {
-        return ( < Image style = {
-                styles.photo
-            }
-            source = {
-                {
-                    uri: this.props.url
+        
+        return ( < ListView style = {
+                    styles.container
                 }
-            }
-            />);
+                dataSource = {
+                    this.props.sourceForList
+                }
+                renderRow = {
+                    (data) =>  
+                                            
+                            <PokeRow pok={data} onPokeClick={this.props.onPokeClick} />
+                }
+                />);
     }
+    
+    
 };

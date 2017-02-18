@@ -1,89 +1,57 @@
 
-import React, {
-    Component
-}
-from 'react';
-import {
-    AppRegistry, ListView, Text, View, StyleSheet, Image
-}
-from 'react-native';
+import React, {  Component}from 'react';
+import {  AppRegistry, ListView,  StyleSheet ,ToastAndroid
+       }from 'react-native';
 
-import PokeRow from './PokeRow';
 
-//business logic module
+import PokeListView from './PokeListView';
+
 import fetchData from './PokeClient';
+import PokeScreen from './PokeScreen';
 
-const pikachu   = 'http://img.pokemondb.net/sprites/heartgold-soulsilver/normal/pikachu.png';
-const urlPrefix = 'http://img.pokemondb.net/sprites/heartgold-soulsilver/';
-const frontPrefix = urlPrefix + 'normal/';
-const backPrefix = urlPrefix + 'back-normal/';
-const suffix = '.png';
-const pokedex = 'http://pokeapi.co/api/v2/pokedex/1/';
 
- const styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
         
         container: {
             flex: 1
             , padding: 12
         , }
-        , viewContainer: {
-            flexDirection: 'row'
-            , flexWrap: 'wrap'
-            , alignItems: 'flex-start'
-            , flex: 1
-        }
-        , text: {
-            marginLeft: 16
-            , fontSize: 21
-            , padding: 8
-        , }
-        , photo: {
-            height: 80
-            , width: 80
-        , }
+        
     , });
 
-
-
-class Poke_ extends Component {
-  render() {
-    return (
-      <View style={{flex: 1, flexDirection: 'row'}}>
-            <Text style = { styles.text}>{this.props._data}</Text>
-            <PokeImage url=  {backPrefix + this.props._data + '.png'} />
-            <PokeImage url=  {frontPrefix + this.props._data + '.png'} />
-        < /View >
-    );
-  }
-}
-
-class AwesomeProject extends Component {
+ class AwesomeProject extends React.Component {
     
     constructor(props) {
         super(props);
         const _dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+        
         this.state = {
-            dataSource: _dataSource.cloneWithRows(['Downloading  data...'])
+            dataSource: _dataSource.cloneWithRows([{name:'Downloading  data...', id:-1}]),
+            chosenPokemon: 'undefined'
         };
         fetchData(this, _dataSource);
     }
-    
-    render() {
-        return ( < ListView style = {
-                    styles.container
-                }
-                dataSource = {
-                    this.state.dataSource
-                }
-                renderRow = {
-                    (data) =>  <PokeRow _data={data} />
-                }
-                / > );
-            }
-            
+     
+    onPokeClick  = (poke) => {
+        ToastAndroid.show('A '+poke.name+' appeared nearby !', ToastAndroid.SHORT);
+        this.setState({ chosenPokemon : poke });
     }
     
-   
-    AppRegistry.registerComponent('AwesomeProject', () => AwesomeProject);
+    onMoveBack = () => {
+        this.setState({ chosenPokemon : 'undefined' });
+    }
+    
+    render() { 
+        if(this.state.chosenPokemon != 'undefined'){
+            return (<PokeScreen pokemonName={this.state.chosenPokemon} onMoveBack = {this.onMoveBack}/> );
+        }else{
+            return (<PokeListView sourceForList={this.state.dataSource} onPokeClick={this.onPokeClick } /> );           
+        }  
+    }          
+}
+
+             
+AppRegistry.registerComponent('AwesomeProject', () => AwesomeProject);
